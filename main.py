@@ -1,13 +1,12 @@
 import argparse
-from game.game import TicTacToe
+from game.game_logic import TicTacToe
 
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("--engine", default=None, type=str,choices=["minimax_8"], help="engine algorithm, if None"
-                                                                                   " initialize PVP game")
+parser.add_argument("--engine", default=True, type=bool, help="initialize PVP game of PVC.")
 parser.add_argument("--symbols", default=("X", "O"), nargs="+", type=str)
-parser.add_argument("--n", default=15, type=int, help="Define the size of the board, default 15x15.")
+parser.add_argument("--n", default=10, type=int, help="Define the size of the board, default 10x10.")
 
 
 def main(args: argparse.Namespace) -> None:

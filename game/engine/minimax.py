@@ -1,34 +1,23 @@
-def minimax(board, depth, is_maximizing):
-    winner = evaluate(board)
+from game.engine.minimax_tree import Node, MinimaxTree, backpropagate
+from game.engine.possible_squares import PossibleSquares
+import time
 
-    if winner == 'X':
-        return {'score': 10 - depth, 'position': None}
-    elif winner == 'O':
-        return {'score': depth - 10, 'position': None}
-
-    if is_maximizing:
-        best_score = {'score': float('-inf'), 'position': None}
-        for i in range(15):
-            for j in range(15):
-                if board[i][j] == '':
-                    board[i][j] = 'X'
-                    score = minimax(board, depth + 1, False)
-                    board[i][j] = ''
-                    if score['score'] > best_score['score']:
-                        best_score = {'score': score['score'], 'position': (i, j)}
-        return best_score
-    else:
-        best_score = {'score': float('inf'), 'position': None}
-        for i in range(15):
-            for j in range(15):
-                if board[i][j] == '':
-                    board[i][j] = 'O'
-                    score = minimax(board, depth + 1, True)
-                    board[i][j] = ''
-                    if score['score'] < best_score['score']:
-                        best_score = {'score': score['score'], 'position': (i, j)}
-        return best_score
+from typing import List, Tuple, Dict
 
 
-def evaluate():
-    pass
+def minimax(coord: Tuple[int, int],
+            board: Dict[str, List[List[int]]],
+            possible_squares: PossibleSquares,
+            depth: int) -> Tuple[int, int]:
+    # Create Minimax_tree
+    minmax = MinimaxTree(Node(coord))
+    print(len(possible_squares.possible_squares))
+    start = time.time()
+    minmax.construct(minmax.head, board, possible_squares, 0, depth)
+    print("--- %s seconds ---" % (time.time() - start))
+    start = time.time()
+    # 'Backpropagate' the minimax tree
+    backpropagate(minmax.head, True)
+    print("--- %s seconds ---" % (time.time() - start))
+    return minmax.maximize(board[list(board.keys())[1]])
+
